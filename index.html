@@ -565,6 +565,18 @@ html,body{margin:0}
 .gate-name:focus{outline:none;border-color:#FF6000}
 .gate .btn{width:100%;height:48px}
 .by-name{color:#71717A}
+.lf{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.lf-who{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap;font-size:13px}
+.lf-who b{font-weight:550;color:#EDEDEF}
+.lf-k{font:500 10px/1 "Geist Mono",ui-monospace,monospace;letter-spacing:.06em;text-transform:uppercase;color:#71717A}
+.lf-role{color:#A1A1AA;font-size:12px}
+.lf-ch{display:flex;flex-wrap:wrap;gap:6px}
+.lf-chip{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 10px;border-radius:8px;border:1px solid #27272C;background:#111114;color:#EDEDEF;font-size:12.5px;text-decoration:none;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lf-chip:hover{border-color:#3A3A41}
+.lf-chip.best{border-color:rgba(255,96,0,.42);background:rgba(255,96,0,.08)}
+.lf-best{font:500 9.5px/1 "Geist Mono",ui-monospace,monospace;letter-spacing:.05em;text-transform:uppercase;color:#FF6000}
+.lf-warn{font-size:12px;line-height:1.45;color:#FBBF24}
+.lf-more summary{cursor:pointer;font-size:12px;color:#71717A}
 </style>
 
 <nav class="rail" id="rail" aria-label="Sections">
@@ -1200,6 +1212,27 @@ html,body{margin:0}
   }
 
   /* ---------- leads ---------- */
+  // who to message: the founder's own channels first, the brand only as a fallback
+  function founderBlock(l){
+    const igUrl=h=>'https://instagram.com/'+String(h).replace(/^@/,'').replace(/^https?:\/\/(www\.)?instagram\.com\//,'').replace(/\/$/,'');
+    const ch=[
+      l.founderLinkedIn?['linkedin','LinkedIn',/^https?:/.test(l.founderLinkedIn)?l.founderLinkedIn:'https://'+l.founderLinkedIn]:null,
+      l.founderInstagram?['instagram','Instagram '+(String(l.founderInstagram).startsWith('@')?l.founderInstagram:''),igUrl(l.founderInstagram)]:null,
+      l.founderEmail?['email',l.founderEmail,'mailto:'+l.founderEmail]:null
+    ].filter(Boolean);
+    const best=l.bestChannel||(ch[0]&&ch[0][0])||'brand';
+    const box=el('div',{class:'lf'});
+    if(l.founderName)box.append(el('div',{class:'lf-who'},el('span',{class:'lf-k',text:'Message'}),el('b',{text:l.founderName}),l.founderRole?el('span',{class:'lf-role',text:l.founderRole}):null));
+    if(ch.length){
+      const row=el('div',{class:'lf-ch'});
+      ch.sort((a,b)=>(b[0]===best)-(a[0]===best)).forEach(([k,label,href])=>row.append(el('a',{class:'lf-chip'+(k===best?' best':''),href,target:'_blank',rel:'noopener'},label.trim(),k===best?el('span',{class:'lf-best',text:'Best'}):null)));
+      box.append(row);
+    }
+    if(l.bestChannelWhy)box.append(el('span',{class:'small',text:l.bestChannelWhy}));
+    if(best==='brand'||!ch.length)box.append(el('span',{class:'lf-warn',text:'No direct founder contact yet. This may reach their social team: '+(l.contact||'brand page')}));
+    else if(l.contact)box.append(el('details',{class:'lf-more'},el('summary',{text:'Brand contacts'}),el('span',{class:'small',text:l.contact})));
+    return box;
+  }
   function renderLeads(){
     const tb=$('#leads-body'); tb.textContent='';
     const rows=[...state.leads].sort((x,y)=>String(y.createdAt||'').localeCompare(String(x.createdAt||'')));
@@ -1211,7 +1244,7 @@ html,body{margin:0}
       const op=el('div',{class:'opener',text:l.opener||''});
       const copy=el('button',{class:'btn sm',text:'Copy',onclick:async e=>{const b=e.currentTarget;try{await navigator.clipboard.writeText(l.opener||'');b.textContent='Copied'}catch(err){const r=document.createRange();r.selectNodeContents(op);const s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent='Selected'}setTimeout(()=>b.textContent='Copy',1500)}});
       tb.append(el('tr',{},
-        td('Brand','full',l.url?el('a',{href:l.url,target:'_blank',rel:'noopener',text:l.brand||l.handle||'Lead'}):(l.brand||'Lead'),el('span',{class:'small',text:[l.niche,l.region].filter(Boolean).join(' · ')}),l.contact?el('span',{class:'small',text:l.contact}):null),
+        td('Brand','full',l.url?el('a',{href:l.url,target:'_blank',rel:'noopener',text:l.brand||l.handle||'Lead'}):(l.brand||'Lead'),el('span',{class:'small',text:[l.niche,l.region].filter(Boolean).join(' · ')}),founderBlock(l)),
         td('Noticed','small',l.problem||'—'),
         td('Opener',null,op,copy),
         td('Status',null,sel,l.status!=='new'?byTag(l.updatedById):null),
