@@ -565,6 +565,17 @@ html,body{margin:0}
 .gate-name:focus{outline:none;border-color:#FF6000}
 .gate .btn{width:100%;height:48px}
 .by-name{color:#71717A}
+.q-inputs{border:1px solid rgba(255,96,0,.42);background:rgba(255,96,0,.05);border-radius:14px;padding:16px 18px;display:flex;flex-direction:column;gap:14px;margin-bottom:18px;max-width:700px}
+.q-inputs-h{display:flex;flex-direction:column;gap:4px}
+.q-inputs-h .q-lbl{color:#FF8A3D}
+.q-field{display:flex;flex-direction:column;gap:5px}
+.q-field-l{font-size:13.5px;font-weight:550;color:#EDEDEF}
+.q-field-h{font-size:12.5px;line-height:1.45;color:#A1A1AA}
+.q-in{height:44px;border-radius:10px;border:1px solid #27272C;background:#111114;color:#EDEDEF;padding:0 12px;font:400 15px Geist,ui-sans-serif,system-ui,sans-serif;width:100%;box-sizing:border-box}
+.q-in:focus{outline:none;border-color:#FF6000}
+.q-inputs-a{display:flex;justify-content:flex-end}
+@media (max-width:760px){.q-inputs-a .btn{width:100%;height:46px}}
+mark.q-tok{background:rgba(255,96,0,.14);color:#FF8A3D;border:1px dashed rgba(255,96,0,.5);border-radius:5px;padding:0 5px;font-weight:550}
 .q-job{border:1px solid #1C1C20;border-radius:14px;background:#0A0A0C;padding:16px 18px;display:flex;flex-direction:column;gap:10px;margin-bottom:18px;max-width:700px}
 .q-job.empty{flex-direction:row;align-items:center;gap:10px;flex-wrap:wrap}
 .q-job-h{display:flex;justify-content:space-between;align-items:center;gap:10px}
@@ -922,7 +933,7 @@ html,body{margin:0}
       rows:[['Job',a.title||'—'],['Budget',a.budget||'—'],['Attached work',atts],['Length',text.trim().split(/\s+/).filter(Boolean).length+' words']],
       confirmText:'Yes, send application',
       run:async()=>{
-        if(/\[[A-Z][A-Z _/-]*\]/.test(text)) throw 'This proposal still has a [PLACEHOLDER] in it. Edit it first.';
+        if(holeRe().test(text)) throw 'This proposal still has a blank to fill in. Use the “Needs your input” boxes first.';
         delete drafts['p-'+a.id];
         await save('applications',a.id,{status:'approved',proposal:text,sendRequestedAt:new Date().toISOString(),sendError:null});
         toast('Queued · sending soon');
@@ -1103,7 +1114,7 @@ html,body{margin:0}
     const clear=()=>{delete drafts[pk];delete drafts[nk]};
     // readable text or editor
     const text=ta.value, ps=paras(text);
-    const reading=el('div',{class:'q-read'}); ps.forEach(p=>reading.append(el('p',{text:p})));
+    const reading=el('div',{class:'q-read'}); ps.forEach(p=>reading.append(el('p',{},...tokenNodes(p,a))));
     if(!ps.length)reading.append(el('p',{class:'q-none',text:'No proposal text yet. Press Edit to write one.'}));
     ta.hidden=!editing; reading.hidden=editing;
     if(editing)requestAnimationFrame(grow);
@@ -1126,9 +1137,9 @@ html,body{margin:0}
     const reqBox=reqOpen?el('div',{class:'q-req'},el('div',{class:'q-lbl',text:'Request changes'}),note,
       el('div',{class:'q-req-a'},el('button',{class:'btn ghost sm',type:'button',text:'Cancel',onclick:()=>{Q.req[a.id]=false;renderApprove()}}),el('button',{class:'btn sm',type:'button',text:'Send request',onclick:sendReq}))):null;
     if(reqOpen)requestAnimationFrame(()=>{const n=document.getElementById(nk);if(n&&document.activeElement!==n&&!n.value)n.focus({preventScroll:true})});
-    const holes=[...new Set((ta.value.match(/\[[A-Z][A-Z _/-]*\]/g)||[]))];
+    const holes=inputFields(a,ta.value);
     const bar=el('div',{class:'q-bar'},
-      holes.length?el('div',{class:'q-alert',role:'alert'},ico(IC.alert),el('span',{},el('b',{text:'Fill in before sending: '}),holes.join(', ')+'. Press Edit and replace '+(holes.length>1?'them':'it')+' with real details.')):null,
+      holes.length?el('div',{class:'q-alert',role:'alert'},ico(IC.alert),el('span',{},el('b',{text:'Fill in '+holes.length+' detail'+(holes.length>1?'s':'')+' first. '}),'Use the “Needs your input” boxes above the proposal.')):null,
       a.sendError?el('div',{class:'q-alert',role:'alert'},ico(IC.alert),el('span',{},el('b',{text:'Last send failed. '}),a.sendError)):null,
       reqBox,
       el('div',{class:'q-acts'},
@@ -1142,12 +1153,51 @@ html,body{margin:0}
     const title=a.title||'Untitled job';
     return el('article',{class:'q-detail-in','data-key':'p:'+a.id},
       el('header',{class:'q-head'},
-        el('div',{class:'q-kicker'},el('span',{class:'q-dot '+(a.status==='approved'?'ok':'acc')}),a.status==='approved'?(a.sendError?'Approved · send failed':'Approved · sending within 15 min'):'Proposal · needs your approval'),
+        el('div',{class:'q-kicker'},el('span',{class:'q-dot '+(a.status==='approved'?'ok':'acc')}),a.status==='approved'?(a.sendError?'Approved · send failed':'Approved · sending within 15 min'):(inputFields(a,a.proposal||'').length?'Proposal · needs your input':'Proposal · needs your approval')),
         el('h3',{class:'q-title'},a.url?el('a',{href:a.url,target:'_blank',rel:'noopener'},title,ico(IC.ext,'q-ext')):title),
         a.company?el('div',{class:'q-co',text:a.company}):null,
         el('div',{class:'q-kvs'},kv('Budget',a.budget),a.fit!=null?kv('Fit',a.fit+'/10'):null,a.postedAt?kv('Posted',fmtDate(a.postedAt)):null,pill(a.status,APP_STATUS))),
-      el('div',{class:'q-body'},el('div',{class:'q-mainc'},jobBox(a),doc),el('aside',{class:'q-aside'},why,work)),
+      el('div',{class:'q-body'},el('div',{class:'q-mainc'},inputBox(a,ta),jobBox(a),doc),el('aside',{class:'q-aside'},why,work)),
       bar);
+  }
+
+  /* ---------- "needs your input" ----------
+     Agents mark details they can't know as [[key]] in the proposal and
+     describe each in needsInput:[{key,label,hint,suggestion}]. Old-style
+     [CAPS] blanks are picked up too. Filling the boxes rewrites the text. */
+  const holeRe=()=>/\[\[[a-z0-9_]+\]\]|\[[A-Z][A-Z _/-]*\]/g;
+  function inputFields(a,text){
+    const defs=Array.isArray(a.needsInput)?a.needsInput:[], seen=new Set(), out=[];
+    (String(text||'').match(holeRe())||[]).forEach(tok=>{
+      if(seen.has(tok))return; seen.add(tok);
+      const key=tok.replace(/^\[\[?|\]?\]$/g,'');
+      const d=defs.find(x=>x&&(x.key===key||x.key===key.toLowerCase()))||{};
+      const nice=key.replace(/[_-]+/g,' ').toLowerCase().replace(/^./,c=>c.toUpperCase());
+      out.push({tok,key,label:d.label||nice,hint:d.hint||'',suggestion:d.suggestion||''});
+    });
+    return out;
+  }
+  function tokenNodes(p,a){
+    const parts=[],re=holeRe(); let last=0,m; const f=inputFields(a,p);
+    while((m=re.exec(p))){if(m.index>last)parts.push(document.createTextNode(p.slice(last,m.index)));const d=f.find(x=>x.tok===m[0]);parts.push(el('mark',{class:'q-tok',text:d?d.label:m[0]}));last=m.index+m[0].length}
+    if(last<p.length)parts.push(document.createTextNode(p.slice(last)));
+    return parts.length?parts:[document.createTextNode(p)];
+  }
+  function inputBox(a,ta){
+    const fields=inputFields(a,ta.value); if(!fields.length)return null;
+    const inputs=fields.map(f=>{const id='in-'+a.id+'-'+f.key, v=drafts[id]!=null?drafts[id]:f.suggestion;
+      const inp=el('input',{class:'q-in',id,type:'text',value:v,placeholder:'Type here','aria-label':f.label}); inp.addEventListener('input',()=>{drafts[id]=inp.value});
+      inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();go.click()}});
+      return {f,inp,id,box:el('label',{class:'q-field',for:id},el('span',{class:'q-field-l',text:f.label}),f.hint?el('span',{class:'q-field-h',text:f.hint}):null,inp)}});
+    const go=el('button',{class:'btn primary',type:'button',text:'Update proposal',onclick:e=>{
+      const empty=inputs.find(x=>!x.inp.value.trim()); if(empty){empty.inp.focus();toast('Fill in '+empty.f.label,true);return}
+      let t=ta.value; inputs.forEach(x=>{t=t.split(x.f.tok).join(x.inp.value.trim());delete drafts[x.id]});
+      delete drafts['p-'+a.id]; save('applications',a.id,{proposal:t,needsInput:null},e.currentTarget);
+    }});
+    return el('div',{class:'q-inputs'},
+      el('div',{class:'q-inputs-h'},el('span',{class:'q-lbl',text:'Needs your input'}),el('span',{class:'q-muted',text:fields.length+' to fill · suggestions are pre-filled, change anything that’s wrong'})),
+      ...inputs.map(x=>x.box),
+      el('div',{class:'q-inputs-a'},go));
   }
 
   // the client's own job post, so the proposal can be read in context
