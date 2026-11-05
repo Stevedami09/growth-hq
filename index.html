@@ -565,6 +565,40 @@ html,body{margin:0}
 .gate-name:focus{outline:none;border-color:#FF6000}
 .gate .btn{width:100%;height:48px}
 .by-name{color:#71717A}
+.c-grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:24px;align-items:start}
+@media (max-width:1000px){.c-grid{grid-template-columns:1fr}}
+.c-col{display:flex;flex-direction:column;gap:12px;min-width:0}
+.c-h{display:flex;align-items:center;gap:8px}
+.c-n{font:500 11px/1 "Geist Mono",ui-monospace,monospace;color:#71717A;border:1px solid #27272C;border-radius:6px;padding:3px 6px}
+.c-n:empty{display:none}
+.c-tip{margin:-4px 0 0;font-size:13px;color:#71717A}
+.c-list{display:flex;flex-direction:column;gap:14px}
+.c-card{border:1px solid #1C1C20;border-radius:16px;background:#0C0C0E;overflow:hidden}
+.c-cover{display:block;width:100%;height:auto;aspect-ratio:4/3;background:#09090B;border-bottom:1px solid #1C1C20}
+.c-body{padding:18px 20px;display:flex;flex-direction:column;gap:12px}
+.c-kick{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;color:#A1A1AA}
+.c-chip{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:6px;border:1px solid #27272C;font-size:11.5px;color:#D4D4D8}
+.c-chip.acc{border-color:rgba(255,96,0,.42);color:#FF8A3D;background:rgba(255,96,0,.06)}
+.c-title{margin:0;font:600 17px/1.35 Geist,ui-sans-serif,system-ui,sans-serif;color:#EDEDEF;letter-spacing:-.01em}
+.c-text{white-space:pre-wrap;font-size:14.5px;line-height:1.62;color:#D4D4D8}
+.c-text.clip{max-height:9.8em;overflow:hidden;-webkit-mask-image:linear-gradient(#000 70%,transparent)}
+.c-more{align-self:flex-start;background:none;border:0;padding:0;color:#A1A1AA;font-size:12.5px;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.c-why{font-size:13px;line-height:1.5;color:#A1A1AA;border-left:2px solid #27272C;padding-left:10px}
+.c-ta{width:100%;min-height:220px;box-sizing:border-box;resize:vertical;border-radius:10px;border:1px solid #27272C;background:#111114;color:#EDEDEF;padding:12px;font:400 14.5px/1.6 Geist,ui-sans-serif,system-ui,sans-serif}
+.c-ta:focus{outline:none;border-color:#FF6000}
+.c-acts{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding-top:4px;border-top:1px solid #1C1C20;margin-top:2px;padding-top:14px}
+.c-acts .sp{flex:1}
+.c-ready{display:flex;flex-direction:column;gap:6px;border:1px solid rgba(52,211,153,.25);background:rgba(52,211,153,.05);border-radius:10px;padding:10px 12px;font-size:13px;color:#A7F3D0}
+.c-ready ol{margin:0;padding-left:18px;color:#D4D4D8}
+.c-empty{border:1px dashed #27272C;border-radius:14px;padding:22px;text-align:center;color:#71717A;font-size:13.5px}
+.e-card{border:1px solid #1C1C20;border-radius:14px;background:#0C0C0E;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.e-top{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.e-who{font-size:13.5px;color:#EDEDEF;font-weight:550}
+.e-ctx{font-size:12.5px;color:#A1A1AA;line-height:1.45}
+.e-com{font-size:14px;line-height:1.55;color:#D4D4D8;background:#111114;border:1px solid #1C1C20;border-radius:10px;padding:10px 12px}
+.e-acts{display:flex;gap:8px;flex-wrap:wrap}
+.e-card.done{opacity:.55}
+@media (max-width:760px){.c-acts .btn,.e-acts .btn{flex:1 1 auto}.c-acts .sp{display:none}}
 .lf{display:flex;flex-direction:column;gap:6px;margin-top:8px}
 .lf-who{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap;font-size:13px}
 .lf-who b{font-weight:550;color:#EDEDEF}
@@ -589,6 +623,7 @@ html,body{margin:0}
     <button class="rail-btn" data-sec="growth" aria-label="Growth plan"><span class="ri"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 17l5-5 3.5 3.5L20 8"/><path d="M14.5 8H20v5.5"/></svg><span class="badge" id="n-growth"></span></span><span class="rail-lbl">Plan</span></button>
     <button class="rail-btn" data-sec="rank" aria-label="Ranking"><span class="ri"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 19.5V13M12 19.5V5.5M18 19.5V10"/></svg></span><span class="rail-lbl">Ranking</span></button>
     <button class="rail-btn" data-sec="leads" aria-label="Leads"><span class="ri"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11.5L20 4.5l-6.5 15-2.5-6z"/><path d="M11 13.5L20 4.5"/></svg><span class="badge" id="n-leads"></span></span><span class="rail-lbl">Leads</span></button>
+    <button class="rail-btn" data-sec="content" aria-label="Content"><span class="ri"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4.5" width="16" height="15" rx="2.5"/><path d="M8 9.5h8M8 13h8M8 16.5h4.5"/></svg><span class="badge" id="n-content"></span></span><span class="rail-lbl">Content</span></button>
   </div>
 </nav>
 
@@ -679,6 +714,14 @@ html,body{margin:0}
       <tbody id="leads-body"><tr><td colspan="5" class="small">The Lead Scout adds new leads every weekday.</td></tr></tbody>
     </table></div>
   </section>
+
+  <section class="sec" id="sec-content" aria-labelledby="h-content" hidden>
+    <div class="sec-head"><div><h2 id="h-content">Content</h2><p class="sec-sub">Posts for Seledi’s Contra feed and comments worth leaving. Approve a post, then post it from Contra yourself: copy the text, save the cover, paste. Comments work the same way. A real person always does the posting.</p></div></div>
+    <div class="c-grid">
+      <div class="c-col"><div class="c-h"><span class="q-lbl">Posts</span><span class="c-n" id="c-posts-n"></span></div><div class="c-list" id="c-posts"></div></div>
+      <div class="c-col"><div class="c-h"><span class="q-lbl">Engage today</span><span class="c-n" id="c-eng-n"></span></div><p class="c-tip">Open the post, like it, paste the comment. A few a day is plenty.</p><div class="c-list" id="c-engage"></div></div>
+    </div>
+  </section>
   </div>
 </main>
 
@@ -723,7 +766,7 @@ html,body{margin:0}
                          replaces the built-in placeholder renderer for that slot
      window.HQ.render()  re-run the full render (call after registering charts)
      window.HQ.util      small helpers (el, sv, fmtDate, fmtTime, reduce) */
-  const state = {apps:[], sugg:[], leads:[], metrics:[], status:{}};
+  const state = {apps:[], sugg:[], leads:[], posts:[], engage:[], metrics:[], status:{}};
   const HQ = window.HQ = Object.assign(window.HQ||{}, {state});
   HQ.onRender = Array.isArray(HQ.onRender) ? HQ.onRender : [];
   HQ.charts = HQ.charts || {};
@@ -753,7 +796,7 @@ html,body{margin:0}
   }
 
   /* ---------- navigation ---------- */
-  const SECS=['overview','approve','apps','growth','rank','leads'];
+  const SECS=['overview','approve','apps','growth','rank','leads','content'];
   const railBtns=[...document.querySelectorAll('.rail-btn')];
   let current=null;
   function moveInd(){
@@ -761,7 +804,7 @@ html,body{margin:0}
     const ri=b.querySelector('.ri')||b, x=b.offsetLeft+ri.offsetLeft, y=b.offsetTop+ri.offsetTop;
     ind.style.width=ri.offsetWidth+'px'; ind.style.height=ri.offsetHeight+'px'; ind.style.transform=`translate(${x}px,${y}px)`;
   }
-  const TITLES={overview:'Overview',approve:'To approve',apps:'Applications',growth:'Growth plan',rank:'Ranking',leads:'Leads'};
+  const TITLES={overview:'Overview',approve:'To approve',apps:'Applications',growth:'Growth plan',rank:'Ranking',leads:'Leads',content:'Content'};
   function setCrumb(t){
     const c=$('#crumb'); if(c)c.textContent=TITLES[t]||'';
     const ic=$('#crumb-ico'), b=railBtns.find(x=>x.dataset.sec===t), svg=b&&b.querySelector('svg');
@@ -807,7 +850,7 @@ html,body{margin:0}
   const TRACK = ['sent','viewed','interview','won','lost','closed'];
   const SUGG_STATUS = {approved:['Approved · updating','ok'],done:['Done','ok'],rejected:['Skipped',''],pending:['Waiting','acc']};
   const LEAD_STATUS = {new:'New',sent:'Messaged',followed_up:'Followed up',replied:'Replied',call:'Call booked',won:'Client',lost:'No'};
-  const AGENTS = {jobHunter:'Job Hunter', growthManager:'Growth Manager', leadScout:'Lead Scout', sender:'Sender'};
+  const AGENTS = {jobHunter:'Job Hunter', growthManager:'Growth Manager', leadScout:'Lead Scout', content:'Content', sender:'Sender'};
   const pill = (st,map)=>{const m=map[st]||[st||'—',''];return el('span',{class:'pill '+m[1],text:m[0]})};
   // "by <name>" — the first name the person typed after entering the PIN
   const byTag = id=> (id && !/^sample-/.test(id) && id.length<=24) ? el('span',{class:'by by-name',text:'by '+id}) : (id?el('span',{class:'by by-name',text:id==='sample-you'?'by you':'by partner'}):null);
@@ -817,7 +860,7 @@ html,body{margin:0}
   async function save(col,id,patch,btn){
     const isDecision = 'status' in patch;
     if(PREVIEW){
-      const key={applications:'apps',suggestions:'sugg',leads:'leads'}[col];
+      const key={applications:'apps',suggestions:'sugg',leads:'leads',posts:'posts',engage:'engage'}[col];
       const it=state[key].find(x=>x.id===id); if(it)Object.assign(it,patch,{updatedAt:new Date().toISOString()},isDecision?{updatedById:'sample-you'}:{});
       renderAll(); toast('Saved · preview only'); return;
     }
@@ -826,7 +869,7 @@ html,body{margin:0}
     try{
       const extra={updatedAt:new Date().toISOString()};
       if(isDecision)extra.updatedById=me||'Someone';
-      const key={applications:'apps',suggestions:'sugg',leads:'leads'}[col];
+      const key={applications:'apps',suggestions:'sugg',leads:'leads',posts:'posts',engage:'engage'}[col];
       const it=key&&state[key].find(x=>x.id===id); if(it){Object.assign(it,patch,extra);renderAll()}
       const r=await rpc('hq_put',{p_key:pin,p_col:col,p_id:id,p_data:{...patch,...extra},p_merge:true,p_if_version:null});
       if(r&&r.error){if(r.error==='bad_pin'||r.error==='locked'){lockOut();return}throw new Error(r.error)}
@@ -866,6 +909,7 @@ html,body{margin:0}
       rows:[['Job',a.title||'—'],['Budget',a.budget||'—'],['Attached work',atts],['Length',text.trim().split(/\s+/).filter(Boolean).length+' words']],
       confirmText:'Yes, send application',
       run:async()=>{
+        if(/\[[A-Z][A-Z _/-]*\]/.test(text)) throw 'This proposal still has a [PLACEHOLDER] in it. Edit it first.';
         delete drafts['p-'+a.id];
         await save('applications',a.id,{status:'approved',proposal:text,sendRequestedAt:new Date().toISOString(),sendError:null});
         toast('Queued · sending soon');
@@ -917,6 +961,8 @@ html,body{margin:0}
     $('#n-growth').textContent = waitS?String(waitS):'';
     const newLeads=state.leads.filter(l=>l.status==='new').length;
     $('#n-leads').textContent = newLeads?String(newLeads):'';
+    const nc=(state.posts||[]).filter(x=>x.status==='pending_approval').length+(state.engage||[]).filter(x=>x.status==='new').length;
+    const ncEl=$('#n-content'); if(ncEl)ncEl.textContent=nc?String(nc):'';
     const anim = fromZero || current==='overview';
     const set=(id,v,fmt)=>{const n=$(id); if(anim)countTo(n,v,fmt,fromZero); else {n._v=typeof v==='number'?v:null;n.textContent=typeof v==='number'?(fmt||String)(v):v;n.classList.toggle('word',typeof v!=='number')}};
     set('#s-wait',wait);
@@ -1067,7 +1113,9 @@ html,body{margin:0}
     const reqBox=reqOpen?el('div',{class:'q-req'},el('div',{class:'q-lbl',text:'Request changes'}),note,
       el('div',{class:'q-req-a'},el('button',{class:'btn ghost sm',type:'button',text:'Cancel',onclick:()=>{Q.req[a.id]=false;renderApprove()}}),el('button',{class:'btn sm',type:'button',text:'Send request',onclick:sendReq}))):null;
     if(reqOpen)requestAnimationFrame(()=>{const n=document.getElementById(nk);if(n&&document.activeElement!==n&&!n.value)n.focus({preventScroll:true})});
+    const holes=[...new Set((ta.value.match(/\[[A-Z][A-Z _/-]*\]/g)||[]))];
     const bar=el('div',{class:'q-bar'},
+      holes.length?el('div',{class:'q-alert',role:'alert'},ico(IC.alert),el('span',{},el('b',{text:'Fill in before sending: '}),holes.join(', ')+'. Press Edit and replace '+(holes.length>1?'them':'it')+' with real details.')):null,
       a.sendError?el('div',{class:'q-alert',role:'alert'},ico(IC.alert),el('span',{},el('b',{text:'Last send failed. '}),a.sendError)):null,
       reqBox,
       el('div',{class:'q-acts'},
@@ -1077,7 +1125,7 @@ html,body{margin:0}
         el('div',{class:'q-acts-r'},saveBtn,a.status==='approved'
           ?el('button',{class:'btn',text:'Cancel send',onclick:e=>save('applications',a.id,{status:'pending_approval'},e.currentTarget)})
           :null,
-          el('button',{class:'btn primary',disabled:a.status==='approved'&&!a.sendError,text:a.status==='approved'&&!a.sendError?'Sending…':'Send to Contra',onclick:()=>sendProposal(a,ta.value)}))));
+          el('button',{class:'btn primary',disabled:(a.status==='approved'&&!a.sendError)||holes.length>0,text:a.status==='approved'&&!a.sendError?'Sending…':'Send to Contra',onclick:()=>sendProposal(a,ta.value)}))));
     const title=a.title||'Untitled job';
     return el('article',{class:'q-detail-in','data-key':'p:'+a.id},
       el('header',{class:'q-head'},
@@ -1252,6 +1300,105 @@ html,body{margin:0}
     });
   }
 
+  /* ---------- content: posts + engage ----------
+     Contra's connector can't post to the feed, like or comment, and Contra's
+     terms bar bots, so a person posts these by hand. Only real-work case
+     studies (kind "project") go to Contra automatically, as private drafts. */
+  const POST_STATUS={pending_approval:['Needs your approval','acc'],changes_requested:['You asked for changes','hi'],approved:['Approved · ready to post','ok'],posted:['Posted','ok'],drafted:['Draft on Contra','ok'],rejected:['Skipped','']};
+  const C={edit:{},req:{},open:{}};
+  function wrapLines(ctx,text,maxW){const words=String(text||'').split(/\s+/).filter(Boolean),lines=[];let cur='';words.forEach(w=>{const t=cur?cur+' '+w:w;if(ctx.measureText(t).width>maxW&&cur){lines.push(cur);cur=w}else cur=t});if(cur)lines.push(cur);return lines}
+  function drawCover(cv,c){
+    const W=1600,H=1200; cv.width=W; cv.height=H; const g=cv.getContext('2d'); c=c||{};
+    g.fillStyle='#09090B'; g.fillRect(0,0,W,H);
+    const rg=g.createRadialGradient(W*.86,H*.1,0,W*.86,H*.1,W*.7); rg.addColorStop(0,'rgba(255,96,0,.22)'); rg.addColorStop(1,'rgba(255,96,0,0)'); g.fillStyle=rg; g.fillRect(0,0,W,H);
+    g.strokeStyle='rgba(255,255,255,.05)'; g.lineWidth=1; for(let x=120;x<W;x+=120){g.beginPath();g.moveTo(x+.5,0);g.lineTo(x+.5,H);g.stroke()}
+    const M=120; g.fillStyle='#FF6000'; g.fillRect(M,M,64,8);
+    g.font='500 30px "Geist Mono",ui-monospace,monospace'; g.fillStyle='#A1A1AA'; g.textBaseline='top'; g.fillText(String(c.kicker||'Social & community').toUpperCase(),M,M+36);
+    let y=M+120;
+    if(c.stat){g.font='600 210px Geist,ui-sans-serif,system-ui,sans-serif'; g.fillStyle='#FF6000'; g.fillText(c.stat,M-8,y); y+=230; if(c.statLabel){g.font='400 38px Geist,ui-sans-serif,system-ui,sans-serif'; g.fillStyle='#A1A1AA'; g.fillText(c.statLabel,M,y); y+=90}}
+    let size=c.stat?78:104; g.font='600 '+size+'px Geist,ui-sans-serif,system-ui,sans-serif'; let lines=wrapLines(g,c.headline||'',W-M*2);
+    while(lines.length>(c.stat?3:5)&&size>56){size-=6;g.font='600 '+size+'px Geist,ui-sans-serif,system-ui,sans-serif';lines=wrapLines(g,c.headline||'',W-M*2)}
+    g.fillStyle='#EDEDEF'; lines.forEach((l,i)=>g.fillText(l,M,y+i*size*1.12));
+    g.fillStyle='rgba(255,255,255,.08)'; g.fillRect(M,H-M-70,W-M*2,1);
+    g.font='500 30px Geist,ui-sans-serif,system-ui,sans-serif'; g.fillStyle='#EDEDEF'; g.fillText('Seledi Abbey',M,H-M-40);
+    g.font='400 30px Geist,ui-sans-serif,system-ui,sans-serif'; g.fillStyle='#71717A'; const nw=g.measureText('Seledi Abbey').width; g.fillText('  ·  Social media & community manager',M+nw,H-M-40);
+  }
+  function saveCover(p){
+    const cv=document.createElement('canvas'); drawCover(cv,p.cover);
+    cv.toBlob(b=>{if(!b){toast('Could not make the image',true);return}const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=(p.id||'cover')+'.png';document.body.append(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1500)},'image/png');
+  }
+  async function copyText(t,btn){try{await navigator.clipboard.writeText(t);btn.textContent='Copied'}catch(e){btn.textContent='Copy failed'}setTimeout(()=>{if(btn.isConnected)btn.textContent=btn.dataset.l},1500)}
+  const cbtn=(label,cls,on)=>{const b=el('button',{class:'btn'+(cls?' '+cls:''),type:'button',text:label,onclick:on});b.dataset.l=label;return b};
+  function postCard(p){
+    const card=el('article',{class:'c-card'});
+    const isProject=p.kind==='project';
+    if(!isProject){const cv=el('canvas',{class:'c-cover','aria-label':'Cover image: '+((p.cover&&p.cover.headline)||p.hook||'')});card.append(cv);requestAnimationFrame(()=>drawCover(cv,p.cover))}
+    const body=el('div',{class:'c-body'}); card.append(body);
+    body.append(el('div',{class:'c-kick'},el('span',{class:'c-chip'+(isProject?'':' acc'),text:isProject?'Case study · goes to Contra as a draft':'Feed post'}),p.lever?el('span',{class:'c-chip',text:p.lever}):null,pill(p.status,POST_STATUS),p.status!=='pending_approval'?byTag(p.updatedById):null));
+    body.append(el('h3',{class:'c-title',text:p.title||p.hook||'Post'}));
+    const editing=!!C.edit[p.id], tid='ct-'+p.id;
+    if(editing){
+      const ta=el('textarea',{class:'c-ta',id:tid}); ta.value=drafts[tid]!=null?drafts[tid]:(p.body||''); ta.addEventListener('input',()=>drafts[tid]=ta.value); body.append(ta);
+    }else{
+      const open=!!C.open[p.id], txt=el('div',{class:'c-text'+(open?'':' clip'),text:p.body||''}); body.append(txt);
+      if(String(p.body||'').length>420)body.append(el('button',{class:'c-more',type:'button',text:open?'Show less':'Read all',onclick:()=>{C.open[p.id]=!open;renderContent()}}));
+    }
+    if(p.why)body.append(el('div',{class:'c-why'},el('b',{text:'Why it works · '}),p.why));
+    if(p.userNote&&p.status==='changes_requested')body.append(el('div',{class:'c-why'},el('b',{text:'Your note · '}),p.userNote));
+    const acts=el('div',{class:'c-acts'});
+    if(p.status==='pending_approval'){
+      if(C.req[p.id]){
+        const nid='cn-'+p.id, note=el('textarea',{class:'c-ta',id:nid,placeholder:'What should change?',style:'min-height:90px'}); note.value=drafts[nid]||''; note.addEventListener('input',()=>drafts[nid]=note.value);
+        body.append(note); requestAnimationFrame(()=>{if(!note.value)note.focus({preventScroll:true})});
+        acts.append(cbtn('Cancel','ghost',()=>{C.req[p.id]=false;renderContent()}),el('span',{class:'sp'}),cbtn('Send request','primary',e=>{if(!note.value.trim()){note.focus();toast('Say what should change',true);return}delete drafts[nid];C.req[p.id]=false;save('posts',p.id,{status:'changes_requested',userNote:note.value.trim()},e.currentTarget)}));
+      }else if(editing){
+        acts.append(cbtn('Cancel','ghost',()=>{C.edit[p.id]=false;delete drafts[tid];renderContent()}),el('span',{class:'sp'}),cbtn('Save','primary',e=>{const v=(document.getElementById(tid)||{}).value;C.edit[p.id]=false;delete drafts[tid];save('posts',p.id,{body:v},e.currentTarget)}));
+      }else{
+        acts.append(cbtn('Skip','ghost',e=>save('posts',p.id,{status:'rejected'},e.currentTarget)),cbtn('Edit','',()=>{C.edit[p.id]=true;renderContent()}),cbtn('Request changes','',()=>{C.req[p.id]=true;renderContent()}),el('span',{class:'sp'}),
+          cbtn(isProject?'Approve · send as draft':'Approve','primary',e=>save('posts',p.id,{status:'approved',approvedAt:new Date().toISOString()},e.currentTarget)));
+      }
+    }else if(p.status==='approved'&&!isProject){
+      body.append(el('div',{class:'c-ready'},el('b',{text:'Ready to post on Contra'}),el('ol',{},el('li',{text:'Copy the text and save the cover'}),el('li',{text:'Open Contra → create a post → paste and attach the image'}),el('li',{text:'Come back and tap Mark as posted'}))));
+      acts.append(cbtn('Copy text','',e=>copyText(p.body||'',e.currentTarget)),cbtn('Save cover','',()=>saveCover(p)),el('a',{class:'btn',href:'https://contra.com/',target:'_blank',rel:'noopener',text:'Open Contra'}),el('span',{class:'sp'}),
+        cbtn('Mark as posted','primary',e=>save('posts',p.id,{status:'posted',postedAt:new Date().toISOString()},e.currentTarget)));
+    }else if(p.status==='approved'&&isProject){
+      body.append(el('div',{class:'c-why',text:p.sendError?('Last try failed: '+p.sendError):'Creating a private draft on Contra within 15 minutes. Add the real images there, then publish.'}));
+      acts.append(cbtn('Cancel','ghost',e=>save('posts',p.id,{status:'pending_approval'},e.currentTarget)));
+    }else if(p.status==='drafted'){
+      body.append(el('div',{class:'c-ready'},el('b',{text:'Draft is on Contra'}),el('span',{text:'Open Seledi’s projects on Contra, add the real photos/screens and a cover, then publish it.'})));
+      if(p.projectUrl)acts.append(el('a',{class:'btn',href:p.projectUrl,target:'_blank',rel:'noopener',text:'Open draft'}));
+    }
+    if(acts.childNodes.length)body.append(acts);
+    return card;
+  }
+  function engageCard(x){
+    const done=x.status!=='new';
+    return el('article',{class:'e-card'+(done?' done':'')},
+      el('div',{class:'e-top'},el('span',{class:'e-who',text:x.author||'Post'}),x.status==='done'?el('span',{class:'pill ok',text:'Done'}):x.status==='skipped'?el('span',{class:'pill',text:'Skipped'}):null),
+      x.context?el('div',{class:'e-ctx',text:x.context}):null,
+      el('div',{class:'e-com',text:x.comment||''}),
+      done?null:el('div',{class:'e-acts'},cbtn('Copy comment','',e=>copyText(x.comment||'',e.currentTarget)),x.url?el('a',{class:'btn',href:x.url,target:'_blank',rel:'noopener',text:'Open post'}):null,
+        cbtn('Done','primary',e=>save('engage',x.id,{status:'done',doneAt:new Date().toISOString()},e.currentTarget)),cbtn('Skip','ghost',e=>save('engage',x.id,{status:'skipped'},e.currentTarget))));
+  }
+  function renderContent(){
+    const pb=$('#c-posts'), eb=$('#c-engage'); if(!pb||!eb)return;
+    if(document.activeElement&&pb.contains(document.activeElement)&&/TEXTAREA/.test(document.activeElement.tagName))return;
+    pb.textContent=''; eb.textContent='';
+    const order={pending_approval:0,approved:1,changes_requested:2,drafted:3,posted:4,rejected:5};
+    const posts=[...(state.posts||[])].filter(p=>p.status!=='review').sort((a,b)=>(order[a.status]??9)-(order[b.status]??9)||String(b.createdAt||'').localeCompare(String(a.createdAt||'')));
+    const live=posts.filter(p=>p.status!=='rejected'&&!(p.status==='posted'&&Date.now()-new Date(p.postedAt||0)>14*864e5));
+    $('#c-posts-n').textContent=posts.filter(p=>p.status==='pending_approval').length||'';
+    if(!loaded)pb.append(el('div',{class:'c-empty',text:waitMsg('Loading…')}));
+    else if(!live.length)pb.append(el('div',{class:'c-empty',text:'The Content agent writes new posts on Monday, Wednesday and Friday mornings.'}));
+    else live.forEach(p=>pb.append(postCard(p)));
+    const week=Date.now()-7*864e5;
+    const eng=[...(state.engage||[])].filter(x=>x.status==='new'||new Date(x.doneAt||x.createdAt||0)>week).sort((a,b)=>(a.status==='new'?0:1)-(b.status==='new'?0:1)||String(b.createdAt||'').localeCompare(String(a.createdAt||'')));
+    $('#c-eng-n').textContent=eng.filter(x=>x.status==='new').length||'';
+    if(!loaded)eb.append(el('div',{class:'c-empty',text:waitMsg('Loading…')}));
+    else if(!eng.length)eb.append(el('div',{class:'c-empty',text:'New comment ideas arrive with each Content run.'}));
+    else eng.forEach(x=>eb.append(engageCard(x)));
+  }
+
   /* ---------- ranking table ---------- */
   function renderRankTable(){
     const tb=$('#rank-body'); tb.textContent='';
@@ -1338,7 +1485,7 @@ html,body{margin:0}
   /* ---------- render ---------- */
   function renderAll(){
     const a=document.activeElement, aid=a&&a.id, s1=a&&a.selectionStart, s2=a&&a.selectionEnd;
-    renderStats(false); renderAgents(); renderNext(); renderApprove(); renderApps(); renderGrowth(); renderLeads(); renderRankTable(); renderCharts();
+    renderStats(false); renderAgents(); renderNext(); renderApprove(); renderApps(); renderGrowth(); renderLeads(); renderContent(); renderRankTable(); renderCharts();
     if(aid&&document.activeElement!==a){const n=document.getElementById(aid);if(n){n.focus({preventScroll:true});try{if(s1!=null)n.setSelectionRange(s1,s2)}catch(e){}}}
     HQ.onRender.forEach(fn=>{try{fn(state)}catch(e){console.error(e)}});
   }
@@ -1403,14 +1550,14 @@ html,body{margin:0}
   }
 
   /* ---------- live data ---------- */
-  const COLS={applications:'apps',suggestions:'sugg',leads:'leads',metrics:'metrics'};
+  const COLS={applications:'apps',suggestions:'sugg',leads:'leads',posts:'posts',engage:'engage',metrics:'metrics'};
   let polling=null, inflight=false, firstLoad=true;
   async function refresh(){
     if(PREVIEW||!pin||inflight)return; inflight=true;
     try{
       const r=await rpc('hq_all',{p_key:pin});
       if(r&&r.error){if(r.error==='bad_pin'||r.error==='locked')lockOut();return}
-      const next={apps:[],sugg:[],leads:[],metrics:[]}; let status={};
+      const next={apps:[],sugg:[],leads:[],posts:[],engage:[],metrics:[]}; let status={};
       (r.docs||[]).forEach(d=>{const k=COLS[d.col]; if(k)next[k].push({id:d.id,...d.data}); else if(d.col==='meta'&&d.id==='status')status=d.data||{}});
       next.metrics.sort((a,b)=>String(a.date).localeCompare(String(b.date)));
       const busy=document.activeElement&&/TEXTAREA|INPUT|SELECT/.test(document.activeElement.tagName);
