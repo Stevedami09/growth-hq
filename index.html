@@ -565,6 +565,19 @@ html,body{margin:0}
 .gate-name:focus{outline:none;border-color:#FF6000}
 .gate .btn{width:100%;height:48px}
 .by-name{color:#71717A}
+.q-job{border:1px solid #1C1C20;border-radius:14px;background:#0A0A0C;padding:16px 18px;display:flex;flex-direction:column;gap:10px;margin-bottom:18px;max-width:700px}
+.q-job.empty{flex-direction:row;align-items:center;gap:10px;flex-wrap:wrap}
+.q-job-h{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.q-job-link{font-size:12.5px;color:#A1A1AA}
+.q-job-m{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12.5px;color:#A1A1AA}
+.q-job-m a{color:#EDEDEF}
+.q-job-t{font-size:14px;line-height:1.6;color:#C4C4CC}
+.q-job-t.clip{max-height:12.5em;overflow:hidden;-webkit-mask-image:linear-gradient(#000 65%,transparent)}
+.q-job-t h4{margin:12px 0 4px;font:600 13px/1.3 Geist,ui-sans-serif,system-ui,sans-serif;color:#EDEDEF}
+.q-job-t h4:first-child{margin-top:0}
+.q-job-t p{margin:0 0 8px}
+.q-job-t ul{margin:0 0 8px;padding-left:18px}
+.q-job-t li{margin:2px 0}
 .c-grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:24px;align-items:start}
 @media (max-width:1000px){.c-grid{grid-template-columns:1fr}}
 .c-col{display:flex;flex-direction:column;gap:12px;min-width:0}
@@ -1031,7 +1044,7 @@ html,body{margin:0}
 
   /* ---------- to approve (inbox: queue list + detail pane) ---------- */
   const mqInbox = window.matchMedia ? matchMedia('(max-width:1023px)') : {matches:false};
-  const Q={sel:null, mOpen:false, editing:{}, req:{}};
+  const Q={sel:null, mOpen:false, editing:{}, req:{}, job:{}};
   const ico=(d,cls)=>{const s=sv('svg',{viewBox:'0 0 24 24','aria-hidden':'true',class:'i'+(cls?' '+cls:'')});String(d).split('|').forEach(p=>sv('path',{d:p},s));return s};
   const IC={ext:'M14 5h5v5|M19 5l-8 8|M17 13.5V18a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1h4.5',back:'M15 5l-7 7 7 7',edit:'M4.5 19.5l1-4L15 6a2.1 2.1 0 0 1 3 3l-9.5 9.5z',warn:'M12 4.5l8.5 15h-17z|M12 10v4|M12 17h.01',dot:'M12 12h.01',check:'M5 12.5l4.5 4.5L19 7.5',arrow:'M5 12h14|M13 6l6 6-6 6',alert:'M12 8v5|M12 16h.01|M12 3.5a8.5 8.5 0 1 1 0 17 8.5 8.5 0 0 1 0-17z',inbox:'M4 13.5l2.5-7.5h11l2.5 7.5|M4 13.5V18a1.5 1.5 0 0 0 1.5 1.5h13A1.5 1.5 0 0 0 20 18v-4.5|M4 13.5h4.5l1.5 2.5h4l1.5-2.5H20'};
   const words=t=>{const w=String(t||'').trim();return w?w.split(/\s+/).length:0};
@@ -1133,10 +1146,29 @@ html,body{margin:0}
         el('h3',{class:'q-title'},a.url?el('a',{href:a.url,target:'_blank',rel:'noopener'},title,ico(IC.ext,'q-ext')):title),
         a.company?el('div',{class:'q-co',text:a.company}):null,
         el('div',{class:'q-kvs'},kv('Budget',a.budget),a.fit!=null?kv('Fit',a.fit+'/10'):null,a.postedAt?kv('Posted',fmtDate(a.postedAt)):null,pill(a.status,APP_STATUS))),
-      el('div',{class:'q-body'},el('div',{class:'q-mainc'},doc),el('aside',{class:'q-aside'},why,work)),
+      el('div',{class:'q-body'},el('div',{class:'q-mainc'},jobBox(a),doc),el('aside',{class:'q-aside'},why,work)),
       bar);
   }
 
+  // the client's own job post, so the proposal can be read in context
+  function jobBox(a){
+    const d=String(a.jobDescription||'').trim();
+    if(!d)return el('div',{class:'q-job empty'},el('span',{class:'q-lbl',text:'Job post'}),el('span',{class:'q-muted'},'Not saved for this job. ',a.url?el('a',{href:a.url,target:'_blank',rel:'noopener',text:'Read it on Contra'}):null));
+    const open=!!Q.job[a.id], body=el('div',{class:'q-job-t'+(open?'':' clip')});
+    let list=null;
+    d.split(/\n/).forEach(line=>{
+      const t=line.trim(); if(!t){list=null;return}
+      if(/^#{1,4}\s/.test(t)){list=null;body.append(el('h4',{text:t.replace(/^#+\s*/,'')}));return}
+      if(/^[-•*]\s/.test(t)){if(!list){list=el('ul');body.append(list)}list.append(el('li',{text:t.replace(/^[-•*]\s*/,'')}));return}
+      list=null; body.append(el('p',{text:t}));
+    });
+    const meta=[a.jobClient,a.jobRate||a.budget,a.postedAt?'Posted '+fmtDate(a.postedAt):null].filter(Boolean);
+    return el('div',{class:'q-job'},
+      el('div',{class:'q-job-h'},el('span',{class:'q-lbl',text:'Job post · from the client'}),a.url?el('a',{class:'q-job-link',href:a.url,target:'_blank',rel:'noopener',text:'Open on Contra'}):null),
+      meta.length?el('div',{class:'q-job-m'},...meta.map((m,i)=>i===0&&a.jobClientUrl?el('a',{href:a.jobClientUrl,target:'_blank',rel:'noopener',text:m}):el('span',{text:m}))):null,
+      body,
+      el('button',{class:'c-more',type:'button',text:open?'Show less':'Read the full job post',onclick:()=>{Q.job[a.id]=!open;renderApprove()}}));
+  }
   function changeBlock(s){
     const P=s.actionPayload&&typeof s.actionPayload==='object'?s.actionPayload:null;
     const fields=P?Object.entries(P).filter(([,v])=>typeof v==='string'&&v.trim()):[];
