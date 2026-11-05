@@ -888,7 +888,7 @@ mark.q-tok{background:rgba(255,96,0,.14);color:#FF8A3D;border:1px dashed rgba(25
   const TRACK = ['sent','viewed','interview','won','lost','closed'];
   const SUGG_STATUS = {approved:['Approved · updating','ok'],done:['Done','ok'],rejected:['Skipped',''],pending:['Waiting','acc']};
   const LEAD_STATUS = {new:'New',sent:'Messaged',followed_up:'Followed up',replied:'Replied',call:'Call booked',won:'Client',lost:'No'};
-  const AGENTS = {jobHunter:'Job Hunter', growthManager:'Growth Manager', leadScout:'Lead Scout', content:'Content', sender:'Sender'};
+  const AGENTS = {jobHunter:'Job Hunter', growthManager:'Growth Manager', leadScout:'Lead Scout', content:'Content', profileBuilder:'Profile Builder', designer:'Graphic Designer', sender:'Sender'};
   const pill = (st,map)=>{const m=map[st]||[st||'—',''];return el('span',{class:'pill '+m[1],text:m[0]})};
   // "by <name>" — the first name the person typed after entering the PIN
   const byTag = id=> (id && !/^sample-/.test(id) && id.length<=24) ? el('span',{class:'by by-name',text:'by '+id}) : (id?el('span',{class:'by by-name',text:id==='sample-you'?'by you':'by partner'}):null);
