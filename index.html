@@ -565,6 +565,17 @@ html,body{margin:0}
 .gate-name:focus{outline:none;border-color:#FF6000}
 .gate .btn{width:100%;height:48px}
 .by-name{color:#71717A}
+.q-tabs{display:flex;gap:4px;padding:4px;margin:0 0 10px;border:1px solid #1C1C20;border-radius:12px;background:#0A0A0C}
+.q-tab{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:8px;height:36px;border:0;border-radius:9px;background:transparent;color:#A1A1AA;font:500 13.5px Geist,ui-sans-serif,system-ui,sans-serif;cursor:pointer}
+.q-tab[aria-selected="true"]{background:#1B1B1F;color:#EDEDEF;box-shadow:inset 0 0 0 1px #27272C}
+.q-tab .cnt{font:500 11px "Geist Mono",ui-monospace,monospace;color:#71717A}
+.q-tab[aria-selected="true"] .cnt{color:#FF8A3D}
+.stack>.q-tabs{max-width:360px}
+.q-skip{display:flex;flex-direction:column;gap:3px;padding:10px 12px;border-radius:10px;text-decoration:none;border:1px solid transparent}
+.q-skip:hover{background:#0F0F12;border-color:#1C1C20}
+.q-skip-t{font-size:13.5px;color:#C4C4CC;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.q-skip-s{font-size:12px;color:#71717A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.q-skip-r{font-size:12px;color:#8B8B94;line-height:1.4}
 .q-prep{border:1px solid rgba(52,211,153,.28);background:rgba(52,211,153,.04);border-radius:14px;padding:16px 18px;display:flex;flex-direction:column;gap:14px;margin-bottom:18px;max-width:760px}
 .q-prep.wait{border-color:rgba(255,96,0,.42);background:rgba(255,96,0,.05)}
 .q-prep-h{display:flex;flex-direction:column;gap:6px}
@@ -804,7 +815,7 @@ mark.q-tok{background:rgba(255,96,0,.14);color:#FF8A3D;border:1px dashed rgba(25
                          replaces the built-in placeholder renderer for that slot
      window.HQ.render()  re-run the full render (call after registering charts)
      window.HQ.util      small helpers (el, sv, fmtDate, fmtTime, reduce) */
-  const state = {apps:[], sugg:[], leads:[], posts:[], engage:[], metrics:[], status:{}};
+  const state = {apps:[], sugg:[], leads:[], posts:[], engage:[], jobs:[], metrics:[], status:{}};
   const HQ = window.HQ = Object.assign(window.HQ||{}, {state});
   HQ.onRender = Array.isArray(HQ.onRender) ? HQ.onRender : [];
   HQ.charts = HQ.charts || {};
@@ -1069,17 +1080,21 @@ mark.q-tok{background:rgba(255,96,0,.14);color:#FF8A3D;border:1px dashed rgba(25
 
   /* ---------- to approve (inbox: queue list + detail pane) ---------- */
   const mqInbox = window.matchMedia ? matchMedia('(max-width:1023px)') : {matches:false};
-  const Q={sel:null, mOpen:false, editing:{}, req:{}, job:{}};
+  const Q={sel:null, mOpen:false, editing:{}, req:{}, job:{}, lane:LS.get('hq-lane')==='all'?'all':'for_you'};
   const ico=(d,cls)=>{const s=sv('svg',{viewBox:'0 0 24 24','aria-hidden':'true',class:'i'+(cls?' '+cls:'')});String(d).split('|').forEach(p=>sv('path',{d:p},s));return s};
   const IC={ext:'M14 5h5v5|M19 5l-8 8|M17 13.5V18a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1h4.5',back:'M15 5l-7 7 7 7',edit:'M4.5 19.5l1-4L15 6a2.1 2.1 0 0 1 3 3l-9.5 9.5z',warn:'M12 4.5l8.5 15h-17z|M12 10v4|M12 17h.01',dot:'M12 12h.01',check:'M5 12.5l4.5 4.5L19 7.5',arrow:'M5 12h14|M13 6l6 6-6 6',alert:'M12 8v5|M12 16h.01|M12 3.5a8.5 8.5 0 1 1 0 17 8.5 8.5 0 0 1 0-17z',inbox:'M4 13.5l2.5-7.5h11l2.5 7.5|M4 13.5V18a1.5 1.5 0 0 0 1.5 1.5h13A1.5 1.5 0 0 0 20 18v-4.5|M4 13.5h4.5l1.5 2.5h4l1.5-2.5H20'};
   const words=t=>{const w=String(t||'').trim();return w?w.split(/\s+/).length:0};
   const host=u=>{try{return new URL(u,location.href).hostname.replace(/^www\./,'')}catch(e){return 'contra.com'}};
   const paras=t=>String(t||'').split(/\n\s*\n/).map(x=>x.trim()).filter(Boolean);
+  const MATCH={strong:'Strong match',can_do:'Can do',stretch:'Stretch'};
   const queue=()=>{
     // older "approved" items (from the previous approve-then-send flow) stay sendable here
-    const props=state.apps.filter(a=>a.status==='pending_approval'||a.status==='approved').sort((x,y)=>(y.fit||0)-(x.fit||0));
-    const sugg=state.sugg.filter(s=>s.status==='pending'||s.status==='approved').sort((x,y)=>(x.rank||99)-(y.rank||99));
-    return {props,sugg,keys:[...props.map(a=>'p:'+a.id),...sugg.map(s=>'s:'+s.id)]};
+    const open=state.apps.filter(a=>a.status==='pending_approval'||a.status==='approved');
+    const forYou=open.filter(a=>a.lane!=='all'), all=open.filter(a=>a.lane==='all');
+    const props=(Q.lane==='all'?all:forYou).sort((x,y)=>(y.fit||0)-(x.fit||0));
+    const sugg=Q.lane==='all'?[]:state.sugg.filter(s=>s.status==='pending'||s.status==='approved').sort((x,y)=>(x.rank||99)-(y.rank||99));
+    const skipped=Q.lane==='all'?(state.jobs||[]).filter(j=>j.status!=='closed'&&!state.apps.some(a=>a.jobId&&a.jobId===j.jobId)).sort((x,y)=>String(y.postedAt||'').localeCompare(String(x.postedAt||''))):[];
+    return {props,sugg,skipped,nFor:forYou.length+state.sugg.filter(s=>s.status==='pending'||s.status==='approved').length,nAll:all.length,keys:[...props.map(a=>'p:'+a.id),...sugg.map(s=>'s:'+s.id)]};
   };
   function pickDefault(q){
     const need=q.props.filter(a=>a.status==='pending_approval')[0];
@@ -1167,7 +1182,7 @@ mark.q-tok{background:rgba(255,96,0,.14);color:#FF8A3D;border:1px dashed rgba(25
     const title=a.title||'Untitled job';
     return el('article',{class:'q-detail-in','data-key':'p:'+a.id},
       el('header',{class:'q-head'},
-        el('div',{class:'q-kicker'},el('span',{class:'q-dot '+(a.status==='approved'?'ok':'acc')}),a.status==='approved'?(a.sendError?'Approved · send failed':'Approved · sending within 15 min'):(inputFields(a,a.proposal||'').length?'Proposal · needs your input':'Proposal · needs your approval')),
+        el('div',{class:'q-kicker'},el('span',{class:'q-dot '+(a.status==='approved'?'ok':'acc')}),a.status==='approved'?(a.sendError?'Approved · send failed':'Approved · sending within 15 min'):(inputFields(a,a.proposal||'').length?'Proposal · needs your input':'Proposal · needs your approval')+(a.lane==='all'&&MATCH[a.match]?' · '+MATCH[a.match]:'')),
         el('h3',{class:'q-title'},a.url?el('a',{href:a.url,target:'_blank',rel:'noopener'},title,ico(IC.ext,'q-ext')):title),
         a.company?el('div',{class:'q-co',text:a.company}):null,
         el('div',{class:'q-kvs'},kv('Budget',a.budget),a.fit!=null?kv('Fit',a.fit+'/10'):null,a.postedAt?kv('Posted',fmtDate(a.postedAt)):null,pill(a.status,APP_STATUS))),
@@ -1301,26 +1316,35 @@ mark.q-tok{background:rgba(255,96,0,.14);color:#FF8A3D;border:1px dashed rgba(25
     const lock=v=>document.documentElement.classList.toggle('q-lock',!!v);
     if(!loaded){lock(false);box.className='stack';box.append(el('div',{class:'empty',text:waitMsg('Loading your queue…')}));return}
     const q=queue(), mobile=mqInbox.matches;
-    if(!q.keys.length){lock(false);Q.mOpen=false;box.className='stack';
-      box.append(el('div',{class:'q-empty'},el('span',{class:'q-empty-i'},ico(IC.check)),el('h3',{text:'You’re all caught up'}),el('p',{text:'No proposals or profile changes are waiting. New ones arrive after the morning Job Hunter and Growth Manager runs.'})));return}
-    if(!Q.sel||!q.keys.includes(Q.sel))Q.sel=pickDefault(q);
+    const tabs=el('div',{class:'q-tabs',role:'tablist','aria-label':'Which jobs'},
+      ...[['for_you','For you',q.nFor],['all','All jobs',q.nAll]].map(([k,l,n])=>el('button',{class:'q-tab',role:'tab',type:'button','aria-selected':Q.lane===k?'true':'false',onclick:()=>{if(Q.lane===k)return;Q.lane=k;LS.set('hq-lane',k);Q.sel=null;Q.mOpen=false;renderApprove()}},l,el('span',{class:'cnt',text:String(n)}))));
+    if(!q.keys.length&&!(q.skipped||[]).length){lock(false);Q.mOpen=false;box.className='stack';
+      box.append(tabs,el('div',{class:'q-empty'},el('span',{class:'q-empty-i'},ico(IC.check)),el('h3',{text:'You’re all caught up'}),el('p',{text:Q.lane==='all'?'No extra jobs waiting. The Job Hunter checks every open Contra job each weekday morning.':'No proposals or profile changes are waiting. New ones arrive after the morning Job Hunter and Growth Manager runs.'})));return}
+    if(!Q.sel||!q.keys.includes(Q.sel))Q.sel=q.keys.length?pickDefault(q):null;
     if(!q.keys.includes(Q.sel))Q.mOpen=false;
     box.className='inbox'+(mobile&&Q.mOpen?' m-open':'');
     // list
     const list=el('nav',{class:'q-list','aria-label':'Approval queue'});
-    list.append(el('div',{class:'q-gh'},el('span',{text:'Proposals'}),el('span',{class:'cnt',text:String(q.props.length)})));
+    list.append(tabs);
+    list.append(el('div',{class:'q-gh'},el('span',{text:Q.lane==='all'?'Proposals ready':'Proposals'}),el('span',{class:'cnt',text:String(q.props.length)})));
     if(!q.props.length)list.append(el('div',{class:'q-gempty',text:'No proposals waiting.'}));
-    q.props.forEach(a=>list.append(qRow('p:'+a.id,a.title||'Untitled job',[a.company,a.budget].filter(Boolean).join(' · ')||'—',a.status==='approved'?'ok':'acc',a.fit!=null?fitMeter(Number(a.fit)):null,(a.title||'Proposal')+', '+(APP_STATUS[a.status]||[''])[0])));
-    list.append(el('div',{class:'q-gh'},el('span',{text:'Profile changes'}),el('span',{class:'cnt',text:String(q.sugg.length)})));
-    if(!q.sugg.length)list.append(el('div',{class:'q-gempty',text:'No profile changes waiting.'}));
+    q.props.forEach(a=>list.append(qRow('p:'+a.id,a.title||'Untitled job',[a.lane==='all'&&MATCH[a.match]?MATCH[a.match]:null,a.company,a.budget].filter(Boolean).join(' · ')||'—',a.status==='approved'?'ok':'acc',a.fit!=null?fitMeter(Number(a.fit)):null,(a.title||'Proposal')+', '+(APP_STATUS[a.status]||[''])[0])));
+    if(Q.lane==='all'){
+      list.append(el('div',{class:'q-gh'},el('span',{text:'Other open jobs · no proposal'}),el('span',{class:'cnt',text:String(q.skipped.length)})));
+      if(!q.skipped.length)list.append(el('div',{class:'q-gempty',text:'None right now.'}));
+      q.skipped.forEach(j=>list.append(el('a',{class:'q-skip',href:j.url||'#',target:'_blank',rel:'noopener'},el('span',{class:'q-skip-t',text:j.title||'Job'}),el('span',{class:'q-skip-s',text:[j.company,j.budget].filter(Boolean).join(' · ')}),j.reason?el('span',{class:'q-skip-r',text:j.reason}):null)));
+    }
+    if(Q.lane!=='all'){list.append(el('div',{class:'q-gh'},el('span',{text:'Profile changes'}),el('span',{class:'cnt',text:String(q.sugg.length)})));
+    if(!q.sugg.length)list.append(el('div',{class:'q-gempty',text:'No profile changes waiting.'}));}
     q.sugg.forEach(s=>list.append(qRow('s:'+s.id,s.title||'Suggestion',[s.area,ACTION_TOOLS[s.actionType]?'Automatic':'By hand'].filter(Boolean).join(' · '),s.status==='approved'?'ok':'acc',s.impact?el('span',{class:'q-imp'+(s.impact==='High'?' hi':''),text:s.impact}):null,(s.title||'Suggestion')+', '+(SUGG_STATUS[s.status]||[''])[0])));
     if(!mobile)list.append(el('div',{class:'q-hint'},el('kbd',{text:'↑'}),el('kbd',{text:'↓'}),'to move'));
     // detail
     const [kind,id]=Q.sel.split(/:(.*)/s);
-    const item=kind==='p'?state.apps.find(a=>a.id===id):state.sugg.find(s=>s.id===id);
+    const item=!Q.sel?null:kind==='p'?state.apps.find(a=>a.id===id):state.sugg.find(s=>s.id===id);
     const det=el('section',{class:'q-detail','aria-label':'Selected item'});
     if(mobile)det.append(el('div',{class:'q-mbar'},el('button',{class:'q-back',type:'button','aria-label':'Back to queue',onclick:()=>{Q.mOpen=false;renderApprove();window.scrollTo(0,0)}},ico(IC.back),'Queue'),el('span',{class:'q-mpos mono',text:(q.keys.indexOf(Q.sel)+1)+' of '+q.keys.length})));
     if(item)det.append(kind==='p'?proposalDetail(item):suggDetail(item));
+    else det.append(el('div',{class:'q-empty'},el('h3',{text:'No proposals ready here yet'}),el('p',{text:'The jobs on the left are open on Contra but don’t match Seledi’s skills well enough for an honest proposal. Tap one to read it on Contra.'})));
     box.append(list);
     if(!mobile||Q.mOpen)box.append(det);
     lock(mobile&&Q.mOpen&&current==='approve');
@@ -1678,14 +1702,14 @@ mark.q-tok{background:rgba(255,96,0,.14);color:#FF8A3D;border:1px dashed rgba(25
   }
 
   /* ---------- live data ---------- */
-  const COLS={applications:'apps',suggestions:'sugg',leads:'leads',posts:'posts',engage:'engage',metrics:'metrics'};
+  const COLS={applications:'apps',suggestions:'sugg',leads:'leads',posts:'posts',engage:'engage',jobs:'jobs',metrics:'metrics'};
   let polling=null, inflight=false, firstLoad=true;
   async function refresh(){
     if(PREVIEW||!pin||inflight)return; inflight=true;
     try{
       const r=await rpc('hq_all',{p_key:pin});
       if(r&&r.error){if(r.error==='bad_pin'||r.error==='locked')lockOut();return}
-      const next={apps:[],sugg:[],leads:[],posts:[],engage:[],metrics:[]}; let status={};
+      const next={apps:[],sugg:[],leads:[],posts:[],engage:[],jobs:[],metrics:[]}; let status={};
       (r.docs||[]).forEach(d=>{const k=COLS[d.col]; if(k)next[k].push({id:d.id,...d.data}); else if(d.col==='meta'&&d.id==='status')status=d.data||{}});
       next.metrics.sort((a,b)=>String(a.date).localeCompare(String(b.date)));
       const busy=document.activeElement&&/TEXTAREA|INPUT|SELECT/.test(document.activeElement.tagName);
