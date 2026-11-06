@@ -565,6 +565,9 @@ html,body{margin:0}
 .gate-name:focus{outline:none;border-color:#FF6000}
 .gate .btn{width:100%;height:48px}
 .by-name{color:#71717A}
+.q-tabs-top{grid-column:1/-1;max-width:520px;margin:0 0 16px}
+.inbox>.q-tabs-top{width:100%}
+.stack>.q-tabs-top{margin-bottom:6px}
 .q-tabs{display:flex;gap:4px;padding:4px;margin:0 0 10px;border:1px solid #1C1C20;border-radius:12px;background:#0A0A0C}
 .q-tab{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:8px;height:36px;border:0;border-radius:9px;background:transparent;color:#A1A1AA;font:500 13.5px Geist,ui-sans-serif,system-ui,sans-serif;cursor:pointer}
 .q-tab[aria-selected="true"]{background:#1B1B1F;color:#EDEDEF;box-shadow:inset 0 0 0 1px #27272C}
@@ -668,7 +671,7 @@ mark.q-tok{background:rgba(255,96,0,.14);color:#FF8A3D;border:1px dashed rgba(25
     <span class="rail-ind" id="rail-ind" aria-hidden="true"></span>
     <button class="rail-btn" data-sec="overview" aria-label="Overview"><span class="ri"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/></svg></span><span class="rail-lbl">Overview</span></button>
     <button class="rail-btn" data-sec="approve" aria-label="To approve"><span class="ri"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M8.5 12.2l2.4 2.4 4.6-4.9"/></svg><span class="badge hot" id="n-approve"></span></span><span class="rail-lbl">Approve</span></button>
-    <button class="rail-btn" data-sec="apps" aria-label="Applications"><span class="ri"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="7" width="17" height="12.5" rx="2"/><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7M3.5 12.5h17"/></svg></span><span class="rail-lbl">Applications</span></button>
+    <button class="rail-btn" data-sec="apps" aria-label="Applications"><span class="ri"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="7" width="17" height="12.5" rx="2"/><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7M3.5 12.5h17"/></svg><span class="badge hot" id="n-apps"></span></span><span class="rail-lbl">Applications</span></button>
     <button class="rail-btn" data-sec="growth" aria-label="Growth plan"><span class="ri"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 17l5-5 3.5 3.5L20 8"/><path d="M14.5 8H20v5.5"/></svg><span class="badge" id="n-growth"></span></span><span class="rail-lbl">Plan</span></button>
     <button class="rail-btn" data-sec="rank" aria-label="Ranking"><span class="ri"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 19.5V13M12 19.5V5.5M18 19.5V10"/></svg></span><span class="rail-lbl">Ranking</span></button>
     <button class="rail-btn" data-sec="leads" aria-label="Leads"><span class="ri"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11.5L20 4.5l-6.5 15-2.5-6z"/><path d="M11 13.5L20 4.5"/></svg><span class="badge" id="n-leads"></span></span><span class="rail-lbl">Leads</span></button>
@@ -722,18 +725,21 @@ mark.q-tok{background:rgba(255,96,0,.14);color:#FF8A3D;border:1px dashed rgba(25
 
   <!-- TO APPROVE -->
   <section class="sec" id="sec-approve" aria-labelledby="h-approve" hidden>
-    <div class="sec-head"><div><h2 id="h-approve">Your queue</h2><p class="sec-sub">Read the card, edit if you like, then press Send to Contra. You get one confirmation before anything goes out.</p></div></div>
+    <div class="sec-head"><div><h2 id="h-approve">Profile changes</h2><p class="sec-sub">Improvements the Growth Manager and Profile Builder prepared for Seledi’s Contra profile. Job proposals live in Applications.</p></div></div>
     <div class="stack" id="approve-list"><div class="empty">Loading your queue…</div></div>
   </section>
 
   <!-- APPLICATIONS -->
   <section class="sec" id="sec-apps" aria-labelledby="h-apps" hidden>
-    <div class="sec-head"><div><h2 id="h-apps">Applications</h2><p class="sec-sub">Once an application is sent, set its status here as the client responds.</p></div></div>
+    <div class="sec-head"><div><h2 id="h-apps">Applications</h2><p class="sec-sub">Every Contra job in one place. For you: jobs in Seledi’s niche. All jobs: everything else she can honestly do, with a proposal ready. Applied: what’s been sent, so you can track replies.</p></div></div>
+    <div class="stack" id="jobs-list"><div class="empty">Loading jobs…</div></div>
+    <div id="applied-wrap" hidden>
     <figure class="panel br chart-card"><div class="ph"><span class="ph-t"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3.5"/></svg>Fit score distribution</span><span class="ph-r">Scored 1–10 by the Job Hunter</span></div><div class="chart-slot" id="chart-fit"></div></figure>
     <div class="tablebox"><table class="tbl">
       <thead><tr><th>Job</th><th>Budget</th><th>Fit</th><th>Status</th><th>Updated</th></tr></thead>
       <tbody id="apps-body"><tr><td colspan="5" class="small">The Job Hunter adds jobs here every weekday morning.</td></tr></tbody>
     </table></div>
+    </div>
   </section>
 
   <!-- GROWTH PLAN -->
@@ -883,9 +889,9 @@ mark.q-tok{background:rgba(255,96,0,.14);color:#FF8A3D;border:1px dashed rgba(25
       if(animate){animateIn($('#sec-'+t));try{window.scrollTo({top:0,behavior:'instant'})}catch(e){window.scrollTo(0,0)}}
       if(t==='overview')renderStats(true);
       if(t==='rank')renderCharts();
-      if(t==='approve'&&loaded)renderApprove();
+      if((t==='approve'||t==='apps')&&loaded){MODE=t==='apps'?'jobs':'profile';renderApprove()}
     }
-    if(t!=='approve')document.documentElement.classList.remove('q-lock');
+    if(t!=='approve'&&t!=='apps')document.documentElement.classList.remove('q-lock');
   }
   railBtns.forEach(b=>b.addEventListener('click',()=>show(b.dataset.sec)));
   window.addEventListener('hashchange',()=>{const h=(location.hash||'').slice(1);if(SECS.includes(h))show(h)});
@@ -1006,7 +1012,9 @@ mark.q-tok{background:rgba(255,96,0,.14);color:#FF8A3D;border:1px dashed rgba(25
   function renderStats(fromZero){
     if(!loaded){return}
     const {wait,waitS}=counts();
-    $('#n-approve').textContent = wait?String(wait):'';
+    const {waitP}=counts();
+    $('#n-approve').textContent = waitS?String(waitS):'';
+    const na=$('#n-apps'); if(na)na.textContent = waitP?String(waitP):'';
     $('#n-growth').textContent = waitS?String(waitS):'';
     const newLeads=state.leads.filter(l=>l.status==='new').length;
     $('#n-leads').textContent = newLeads?String(newLeads):'';
@@ -1080,7 +1088,13 @@ mark.q-tok{background:rgba(255,96,0,.14);color:#FF8A3D;border:1px dashed rgba(25
 
   /* ---------- to approve (inbox: queue list + detail pane) ---------- */
   const mqInbox = window.matchMedia ? matchMedia('(max-width:1023px)') : {matches:false};
-  const Q={sel:null, mOpen:false, editing:{}, req:{}, job:{}, lane:LS.get('hq-lane')==='all'?'all':'for_you'};
+  // two inboxes share this code: "jobs" (Applications) and "profile" (To approve); each keeps its own selection
+  let MODE='profile';
+  const Q={_sel:{jobs:null,profile:null},_m:{jobs:false,profile:false}, editing:{}, req:{}, job:{}, lane:['all','applied'].includes(LS.get('hq-lane'))?LS.get('hq-lane'):'for_you',
+    get sel(){return this._sel[MODE]}, set sel(v){this._sel[MODE]=v},
+    get mOpen(){return this._m[MODE]}, set mOpen(v){this._m[MODE]=v}};
+  const modeOf=key=>String(key||'').startsWith('s:')?'profile':'jobs';
+  const secOf=m=>m==='jobs'?'apps':'approve';
   const ico=(d,cls)=>{const s=sv('svg',{viewBox:'0 0 24 24','aria-hidden':'true',class:'i'+(cls?' '+cls:'')});String(d).split('|').forEach(p=>sv('path',{d:p},s));return s};
   const IC={ext:'M14 5h5v5|M19 5l-8 8|M17 13.5V18a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1h4.5',back:'M15 5l-7 7 7 7',edit:'M4.5 19.5l1-4L15 6a2.1 2.1 0 0 1 3 3l-9.5 9.5z',warn:'M12 4.5l8.5 15h-17z|M12 10v4|M12 17h.01',dot:'M12 12h.01',check:'M5 12.5l4.5 4.5L19 7.5',arrow:'M5 12h14|M13 6l6 6-6 6',alert:'M12 8v5|M12 16h.01|M12 3.5a8.5 8.5 0 1 1 0 17 8.5 8.5 0 0 1 0-17z',inbox:'M4 13.5l2.5-7.5h11l2.5 7.5|M4 13.5V18a1.5 1.5 0 0 0 1.5 1.5h13A1.5 1.5 0 0 0 20 18v-4.5|M4 13.5h4.5l1.5 2.5h4l1.5-2.5H20'};
   const words=t=>{const w=String(t||'').trim();return w?w.split(/\s+/).length:0};
@@ -1091,10 +1105,11 @@ mark.q-tok{background:rgba(255,96,0,.14);color:#FF8A3D;border:1px dashed rgba(25
     // older "approved" items (from the previous approve-then-send flow) stay sendable here
     const open=state.apps.filter(a=>a.status==='pending_approval'||a.status==='approved');
     const forYou=open.filter(a=>a.lane!=='all'), all=open.filter(a=>a.lane==='all');
-    const props=(Q.lane==='all'?all:forYou).sort((x,y)=>(y.fit||0)-(x.fit||0));
-    const sugg=Q.lane==='all'?[]:state.sugg.filter(s=>s.status==='pending'||s.status==='approved').sort((x,y)=>(x.rank||99)-(y.rank||99));
-    const skipped=Q.lane==='all'?(state.jobs||[]).filter(j=>j.status!=='closed'&&!state.apps.some(a=>a.jobId&&a.jobId===j.jobId)).sort((x,y)=>String(y.postedAt||'').localeCompare(String(x.postedAt||''))):[];
-    return {props,sugg,skipped,nFor:forYou.length+state.sugg.filter(s=>s.status==='pending'||s.status==='approved').length,nAll:all.length,keys:[...props.map(a=>'p:'+a.id),...sugg.map(s=>'s:'+s.id)]};
+    const props=MODE!=='jobs'||Q.lane==='applied'?[]:(Q.lane==='all'?all:forYou).sort((x,y)=>(y.fit||0)-(x.fit||0));
+    const sugg=MODE!=='profile'?[]:state.sugg.filter(s=>s.status==='pending'||s.status==='approved').sort((x,y)=>(x.rank||99)-(y.rank||99));
+    const skipped=MODE==='jobs'&&Q.lane==='all'?(state.jobs||[]).filter(j=>j.status!=='closed'&&!state.apps.some(a=>a.jobId&&a.jobId===j.jobId)).sort((x,y)=>String(y.postedAt||'').localeCompare(String(x.postedAt||''))):[];
+    const nApplied=state.apps.filter(a=>TRACK.includes(a.status)).length;
+    return {props,sugg,skipped,nFor:forYou.length,nAll:all.length,nApplied,keys:[...props.map(a=>'p:'+a.id),...sugg.map(s=>'s:'+s.id)]};
   };
   function pickDefault(q){
     const need=q.props.filter(a=>a.status==='pending_approval')[0];
@@ -1103,11 +1118,11 @@ mark.q-tok{background:rgba(255,96,0,.14);color:#FF8A3D;border:1px dashed rgba(25
     return q.keys.length?(q.props[0]?'p:'+q.props[0].id:(sp?'s:'+sp.id:q.keys[0])):null;
   }
   function selectItem(key,open){
-    Q.sel=key; if(open&&mqInbox.matches)Q.mOpen=true;
+    MODE=modeOf(key); Q.sel=key; if(open&&mqInbox.matches)Q.mOpen=true;
     renderApprove();
     if(!mqInbox.matches){const r=document.querySelector('.q-row[aria-current="true"]');if(r&&r.scrollIntoView)r.scrollIntoView({block:'nearest'})}
   }
-  HQ.approveSelect=key=>{Q.sel=key;if(mqInbox.matches)Q.mOpen=true;renderApprove()};
+  HQ.approveSelect=key=>{MODE=modeOf(key);if(MODE==='jobs'){const a=state.apps.find(x=>'p:'+x.id===key);Q.lane=a&&a.lane==='all'?'all':'for_you'}Q.sel=key;if(mqInbox.matches)Q.mOpen=true;renderApprove()};
 
   function fitMeter(f){
     const m=el('span',{class:'q-fit',title:'Fit '+f+'/10'}),bars=el('span',{class:'q-seg','aria-hidden':'true'});
@@ -1310,31 +1325,40 @@ mark.q-tok{background:rgba(255,96,0,.14);color:#FF8A3D;border:1px dashed rgba(25
   }
 
   function renderApprove(){
-    const box=$('#approve-list');
+    const keep=MODE;
+    MODE='profile'; renderInbox();
+    MODE='jobs'; renderInbox();
+    MODE=current==='approve'?'profile':current==='apps'?'jobs':keep;
+  }
+  function renderInbox(){
+    const box=MODE==='jobs'?$('#jobs-list'):$('#approve-list'); if(!box)return;
+    if(MODE==='jobs'){const aw=$('#applied-wrap'); if(aw)aw.hidden=Q.lane!=='applied'}
     const prevScroll=(box.querySelector('.q-detail')||{}).scrollTop||0;
     box.textContent='';
     const lock=v=>document.documentElement.classList.toggle('q-lock',!!v);
     if(!loaded){lock(false);box.className='stack';box.append(el('div',{class:'empty',text:waitMsg('Loading your queue…')}));return}
     const q=queue(), mobile=mqInbox.matches;
-    const tabs=el('div',{class:'q-tabs',role:'tablist','aria-label':'Which jobs'},
-      ...[['for_you','For you',q.nFor],['all','All jobs',q.nAll]].map(([k,l,n])=>el('button',{class:'q-tab',role:'tab',type:'button','aria-selected':Q.lane===k?'true':'false',onclick:()=>{if(Q.lane===k)return;Q.lane=k;LS.set('hq-lane',k);Q.sel=null;Q.mOpen=false;renderApprove()}},l,el('span',{class:'cnt',text:String(n)}))));
+    const tabs=MODE!=='jobs'?null:el('div',{class:'q-tabs q-tabs-top',role:'tablist','aria-label':'Which jobs'},
+      ...[['for_you','For you',q.nFor],['all','All jobs',q.nAll],['applied','Applied',q.nApplied]].map(([k,l,n])=>el('button',{class:'q-tab',role:'tab',type:'button','aria-selected':Q.lane===k?'true':'false',onclick:()=>{if(Q.lane===k)return;Q.lane=k;LS.set('hq-lane',k);Q.sel=null;Q.mOpen=false;renderApprove()}},l,el('span',{class:'cnt',text:String(n)}))));
+    if(MODE==='jobs'&&Q.lane==='applied'){lock(false);box.className='stack';box.append(tabs);return}
     if(!q.keys.length&&!(q.skipped||[]).length){lock(false);Q.mOpen=false;box.className='stack';
-      box.append(tabs,el('div',{class:'q-empty'},el('span',{class:'q-empty-i'},ico(IC.check)),el('h3',{text:'You’re all caught up'}),el('p',{text:Q.lane==='all'?'No extra jobs waiting. The Job Hunter checks every open Contra job each weekday morning.':'No proposals or profile changes are waiting. New ones arrive after the morning Job Hunter and Growth Manager runs.'})));return}
+      box.append(...[tabs,el('div',{class:'q-empty'},el('span',{class:'q-empty-i'},ico(IC.check)),el('h3',{text:'You’re all caught up'}),el('p',{text:MODE==='profile'?'No profile changes are waiting. New ones arrive after the morning Growth Manager and Profile Builder runs.':Q.lane==='all'?'No extra jobs waiting. The Job Hunter checks every open Contra job each weekday morning.':'No niche proposals waiting. New ones arrive after the morning Job Hunter and Growth Manager runs.'}))].filter(Boolean));return}
     if(!Q.sel||!q.keys.includes(Q.sel))Q.sel=q.keys.length?pickDefault(q):null;
     if(!q.keys.includes(Q.sel))Q.mOpen=false;
     box.className='inbox'+(mobile&&Q.mOpen?' m-open':'');
+    if(tabs)box.append(tabs);
     // list
-    const list=el('nav',{class:'q-list','aria-label':'Approval queue'});
-    list.append(tabs);
+    const list=el('nav',{class:'q-list','aria-label':MODE==='jobs'?'Job proposals':'Profile changes'});
+    if(MODE==='jobs'){
     list.append(el('div',{class:'q-gh'},el('span',{text:Q.lane==='all'?'Proposals ready':'Proposals'}),el('span',{class:'cnt',text:String(q.props.length)})));
-    if(!q.props.length)list.append(el('div',{class:'q-gempty',text:'No proposals waiting.'}));
+    if(!q.props.length)list.append(el('div',{class:'q-gempty',text:'No proposals waiting.'}));}
     q.props.forEach(a=>list.append(qRow('p:'+a.id,a.title||'Untitled job',[a.lane==='all'&&MATCH[a.match]?MATCH[a.match]:null,a.company,a.budget].filter(Boolean).join(' · ')||'—',a.status==='approved'?'ok':'acc',a.fit!=null?fitMeter(Number(a.fit)):null,(a.title||'Proposal')+', '+(APP_STATUS[a.status]||[''])[0])));
-    if(Q.lane==='all'){
+    if(MODE==='jobs'&&Q.lane==='all'){
       list.append(el('div',{class:'q-gh'},el('span',{text:'Other open jobs · no proposal'}),el('span',{class:'cnt',text:String(q.skipped.length)})));
       if(!q.skipped.length)list.append(el('div',{class:'q-gempty',text:'None right now.'}));
       q.skipped.forEach(j=>list.append(el('a',{class:'q-skip',href:j.url||'#',target:'_blank',rel:'noopener'},el('span',{class:'q-skip-t',text:j.title||'Job'}),el('span',{class:'q-skip-s',text:[j.company,j.budget].filter(Boolean).join(' · ')}),j.reason?el('span',{class:'q-skip-r',text:j.reason}):null)));
     }
-    if(Q.lane!=='all'){list.append(el('div',{class:'q-gh'},el('span',{text:'Profile changes'}),el('span',{class:'cnt',text:String(q.sugg.length)})));
+    if(MODE==='profile'){list.append(el('div',{class:'q-gh'},el('span',{text:'Profile changes'}),el('span',{class:'cnt',text:String(q.sugg.length)})));
     if(!q.sugg.length)list.append(el('div',{class:'q-gempty',text:'No profile changes waiting.'}));}
     q.sugg.forEach(s=>list.append(qRow('s:'+s.id,s.title||'Suggestion',[s.area,ACTION_TOOLS[s.actionType]?'Automatic':'By hand'].filter(Boolean).join(' · '),s.status==='approved'?'ok':'acc',s.impact?el('span',{class:'q-imp'+(s.impact==='High'?' hi':''),text:s.impact}):null,(s.title||'Suggestion')+', '+(SUGG_STATUS[s.status]||[''])[0])));
     if(!mobile)list.append(el('div',{class:'q-hint'},el('kbd',{text:'↑'}),el('kbd',{text:'↓'}),'to move'));
@@ -1347,18 +1371,19 @@ mark.q-tok{background:rgba(255,96,0,.14);color:#FF8A3D;border:1px dashed rgba(25
     else det.append(el('div',{class:'q-empty'},el('h3',{text:'No proposals ready here yet'}),el('p',{text:'The jobs on the left are open on Contra but don’t match Seledi’s skills well enough for an honest proposal. Tap one to read it on Contra.'})));
     box.append(list);
     if(!mobile||Q.mOpen)box.append(det);
-    lock(mobile&&Q.mOpen&&current==='approve');
+    lock(mobile&&Q.mOpen&&current===secOf(MODE));
     if(prevScroll)det.scrollTop=prevScroll;
   }
   document.addEventListener('keydown',e=>{
-    if(current!=='approve'||mqInbox.matches||e.altKey||e.metaKey||e.ctrlKey)return;
+    if((current!=='approve'&&current!=='apps')||mqInbox.matches||e.altKey||e.metaKey||e.ctrlKey)return;
+    MODE=current==='apps'?'jobs':'profile'; if(MODE==='jobs'&&Q.lane==='applied')return;
     const t=e.target; if(t&&(/^(TEXTAREA|INPUT|SELECT)$/.test(t.tagName)||t.isContentEditable)||$('#sheet'))return;
     if(e.key!=='ArrowDown'&&e.key!=='ArrowUp')return;
     const k=queue().keys; if(!k.length)return; e.preventDefault();
     const i=Math.max(0,k.indexOf(Q.sel)); selectItem(k[Math.max(0,Math.min(k.length-1,i+(e.key==='ArrowDown'?1:-1)))]);
     const r=document.querySelector('.q-row[aria-current="true"]'); if(r)r.focus({preventScroll:true});
   });
-  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&current==='approve'&&Q.mOpen&&mqInbox.matches&&!$('#sheet')&&!(e.target&&e.target.tagName==='TEXTAREA')){Q.mOpen=false;renderApprove()}});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&(current==='approve'||current==='apps')&&(MODE=current==='apps'?'jobs':'profile')&&Q.mOpen&&mqInbox.matches&&!$('#sheet')&&!(e.target&&e.target.tagName==='TEXTAREA')){Q.mOpen=false;renderApprove()}});
   if(mqInbox.addEventListener)mqInbox.addEventListener('change',()=>{if(loaded)renderApprove()});
 
   function suggCard(s,done){
@@ -1377,7 +1402,7 @@ mark.q-tok{background:rgba(255,96,0,.14);color:#FF8A3D;border:1px dashed rgba(25
   /* ---------- applications ---------- */
   function renderApps(){
     const tb=$('#apps-body'); tb.textContent='';
-    const rows=state.apps.filter(a=>a.status!=='review').sort((x,y)=>String(y.updatedAt||y.createdAt||'').localeCompare(String(x.updatedAt||x.createdAt||'')));
+    const rows=state.apps.filter(a=>TRACK.includes(a.status)).sort((x,y)=>String(y.updatedAt||y.createdAt||'').localeCompare(String(x.updatedAt||x.createdAt||'')));
     if(!rows.length){tb.append(el('tr',{},el('td',{colspan:'5',class:'small',text:'The Job Hunter adds jobs here every weekday morning.'})));return}
     rows.forEach(a=>{
       let statusEl;
@@ -2156,7 +2181,7 @@ mark.q-tok{background:rgba(255,96,0,.14);color:#FF8A3D;border:1px dashed rgba(25
     kick();
   }
   function openItem(n){
-    const map={apps:n.st==='pending_approval'?['approve','#p-'+n.id]:['apps','#st-'+n.id],leads:['leads','#ls-'+n.id],sugg:[n.st==='pending'?'approve':'growth',null]};
+    const map={apps:n.st==='pending_approval'?['apps','#p-'+n.id]:['apps','#st-'+n.id],leads:['leads','#ls-'+n.id],sugg:[n.st==='pending'?'approve':'growth',null]};
     if(HQ.approveSelect&&((n.t==='apps'&&n.st==='pending_approval')||(n.t==='sugg'&&n.st==='pending')))HQ.approveSelect((n.t==='apps'?'p:':'s:')+n.id);
     jump(map[n.t][0],map[n.t][1]);
   }
